@@ -7,6 +7,7 @@ const {
   logout,
   updateUserDetails,
 } = require("../controller/userControllers");
+const { searchUser } = require("../controller/SearchUser");
 const router = Router();
 
 router.post("/register", (req, res) => {
@@ -37,6 +38,11 @@ router.get("/logout", (req, res) => {
 router.post("/update-user", (req, res) => {
   console.log("update user");
   updateUserDetails(req, res);
+});
+
+router.post("/search-user", (req, res) => {
+  console.log("search user");
+  searchUser(req, res);
 });
 
 module.exports = router;
