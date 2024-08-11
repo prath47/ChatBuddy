@@ -4,9 +4,10 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/userRouter");
+const { app, server } = require("./socket/socket.js");
 dotenv.config();
 
-const app = express();
+// const app = express();
 const port = process.env.port || 9090;
 
 mongoose
@@ -27,8 +28,10 @@ app.get("/", (req, res) => {
   res.json({ message: "hi" });
 });
 
+//socket running at http://localhost:5173/
+
 app.use("/api", userRouter);
 
-app.listen(3000, () => {
+server.listen(3000, () => {
   console.log("server started", port);
 });

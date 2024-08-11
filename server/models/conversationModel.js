@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { mongoose, Schema, model } = require("mongoose");
 
 const messageSchema = new Schema(
   {
@@ -18,6 +18,11 @@ const messageSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    msgByUserId: {
+      type: Schema.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
@@ -27,18 +32,18 @@ const messageModel = model("Message", messageSchema);
 const conversationSchema = new Schema(
   {
     sender: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.ObjectId,
       required: true,
       ref: "User",
     },
     receiver: {
-      type: mongoose.Schema.ObjectId,
+      type: Schema.ObjectId,
       required: true,
       ref: "User",
     },
     messages: [
       {
-        type: mongoose.Schema.ObjectId,
+        type: Schema.ObjectId,
         ref: "Message",
       },
     ],

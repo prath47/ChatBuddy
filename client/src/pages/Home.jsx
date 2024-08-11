@@ -2,9 +2,15 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { logout, setUser } from "../redux/UserSlice";
+import {
+  logout,
+  setUser,
+  setOnlineUser,
+  setSocketConnection,
+} from "../redux/UserSlice";
 import Siderbar from "../components/Siderbar";
 import logo from "../assets/logo.png";
+import io from "socket.io-client";
 
 const Home = () => {
   const user = useSelector((state) => state.user);
@@ -12,7 +18,7 @@ const Home = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  console.log("redux user", user);
+  // console.log("redux user", user);
   const fetchUserDetails = async () => {
     try {
       const URL = `${
@@ -27,7 +33,7 @@ const Home = () => {
         navigate("/email");
       }
 
-      console.log(response.data.data);
+      // console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -39,6 +45,25 @@ const Home = () => {
 
   const basePath = location.pathname === "/";
 
+  //socket connection
+  useEffect(() => {
+    const socketConnection = io(import.meta.env.VITE_REACT_APP_BACKEND_URL, {
+      auth: {
+        token: localStorage.getItem("token"),
+      },
+    });
+
+    socketConnection.on("onlineUser", (data) => {
+      // console.log(data);
+      dispatch(setOnlineUser(data));
+    });
+    
+    dispatch(setSocketConnection(socketConnection));
+
+    return () => {
+      socketConnection.disconnect();
+    };
+  }, []);
   return (
     <div className="grid lg:grid-cols-[300px,1fr] h-screen max-h-screen">
       <section className={`bg-white ${!basePath && "hidden"} lg:block`}>
